@@ -10,6 +10,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventDispatcher.h>
+#import <Foundation/Foundation.h>
 
 NSString *const RCTRemoteNotificationReceived = @"RemoteNotificationReceived";
 
@@ -79,15 +80,38 @@ RCT_EXPORT_MODULE()
 
 + (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-  NSMutableString *hexString = [NSMutableString string];
-  NSUInteger deviceTokenLength = deviceToken.length;
-  const unsigned char *bytes = deviceToken.bytes;
-  for (NSUInteger i = 0; i < deviceTokenLength; i++) {
-    [hexString appendFormat:@"%02x", bytes[i]];
-  }
+//  NSMutableString *hexString = [NSMutableString string];
+//  NSUInteger deviceTokenLength = deviceToken.length;
+//  const unsigned char *bytes = deviceToken.bytes;
+//  for (NSUInteger i = 0; i < deviceTokenLength; i++) {
+//    [hexString appendFormat:@"%02x", bytes[i]];
+//  }
+  NSString *deviceTokenString = [deviceToken base64EncodedStringWithOptions:0];
+  NSLog(@"Base64 Encoded: %@", deviceTokenString);
+    
+    // Decode the base64 string
+//    NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:deviceTokenString options:0];
+//
+//
+//    if (decodedData) {
+//        // Convert the NSData object to a string (assuming the data represents a UTF-8 string)
+//        NSString *decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+//        
+//        if (decodedString) {
+//            NSLog(@"%@", decodedString);
+//        } else {
+//            NSLog(@"Failed to decode NSData to NSString.");
+//        }
+//    } else {
+//        NSLog(@"Failed to decode base64 string to NSData.");
+//    }
+
+    
+//    NSString *base64 = deviceToken.base64Encoding;
   [[NSNotificationCenter defaultCenter] postNotificationName:kRemoteNotificationsRegistered
                                                       object:self
-                                                    userInfo:@{@"deviceToken" : [hexString copy]}];
+                                                    userInfo:@{@"deviceToken" : deviceTokenString}];
+//                                                    userInfo:@{@"deviceToken" : [hexString copy]}];
 }
 
 + (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
